@@ -90,3 +90,43 @@
     (-> f
         (apply args)
         (clamp lower upper))))
+
+;; Genetic Programming
+
+(defn mutate
+  "Generator that mutates a base, the first element being the base."
+  [base mutator]
+  (concat [base]
+          (repeatedly #(mutator base))))
+
+(defn attach-score
+  "Attaches the score to a specimen."
+  [score-fn specimen]
+  [specimen (score-fn specimen)])
+
+(defn generation
+  "Picks out the best one from a generation."
+  [base mutator score-fn gen-size]
+  (->> (mutate base mutator)
+       (take gen-size)
+       (map (partial attach-score score-fn))
+       (sort-by second)
+       first
+       first))
+
+(defn evolution
+  "Generator for generations."
+  [base mutator score-fn gen-size]
+  (iterate #(generation % mutator score-fn gen-size) base))
+
+;; Example to approximate the square root of 2.
+;; (def base 0.0)
+;; (defn mutator [base]
+;;   (-> (rand)
+;;       (- 0.5)
+;;       (+ base)))
+;; (defn score-fn [x]
+;;   (-> x
+;;       (- (Math/sqrt 2))
+;;       Math/abs))
+;; (nth (evolution base mutator score-fn 100) 100)
