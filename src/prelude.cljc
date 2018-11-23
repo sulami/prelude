@@ -1,4 +1,4 @@
-(ns schlachtschiff
+(ns sulami.prelude
   (:require [clojure.pprint :refer [pprint]]))
 
 ;; Development
@@ -37,14 +37,22 @@
         tail (-> idx (+ 1) (drop coll) vec)]
     (reduce into [head [elm] tail])))
 
-;; Maps
-
-(defn set-in
-  "Like update in, but just sets."
-  [m ks v]
-  (update-in m ks (constantly v)))
+(defn insert-in
+  "Inserts elm into coll at idx, overwriting whatever was there before."
+  [elm idx coll]
+  (let [head (take idx coll)
+        tail (drop idx coll)]
+    (concat head (list elm) tail)))
 
 ;; Maths
+
+(defn distance
+  "Distance between two numbers."
+  [x y]
+  (Math/abs (- x y)))
+
+(defn avg [coll]
+  (/ (apply + coll) (count coll)))
 
 (def fibonacci
   "Lazy generator of the fibonacci sequence.
@@ -91,6 +99,15 @@
         (apply args)
         (clamp lower upper))))
 
+;; Monte Carlo
+
+(defn monte-carlo
+  "Find a result via Monte Carlo approximation."
+  [sample-fn eval-fn sample-size]
+  (->> sample-fn
+       (repeatedly sample-size)
+       eval-fn))
+
 ;; Genetic Programming
 
 (defn mutate
@@ -129,4 +146,47 @@
 ;;   (-> x
 ;;       (- (Math/sqrt 2))
 ;;       Math/abs))
-;; (nth (evolution base mutator score-fn 100) 100)
+;; (take 10 (evolution base mutator score-fn 10))
+
+;; Build a pipeline
+
+;; (def base '(->))
+;; (defn mutator [base]
+;;   (let [a (rand-nth [+ - * quot])
+;;         b (+ 1 (rand-int 10))]
+;;     (concat base (list (list a b)))))
+
+;; (defn proto [x]
+;;   (-> x (+ 5) (quot 2) (- 1) (* 3)))
+
+;; (def tests
+;;   [[-6 (proto -6)]
+;;    [-1 (proto -1)]
+;;    [0 (proto 0)]
+;;    [1 (proto 1)]
+;;    [2 (proto 2)]
+;;    [5 (proto 5)]
+;;    [7 (proto 7)]
+;;    [10 (proto 10)]
+;;    [100 (proto 100)]])
+
+;; (defn score-fn [x]
+;;   (->> (map
+;;         (fn [[i o]]
+;;           (-> (insert-in i 1 x)
+;;               eval
+;;               (distance o)))
+;;         tests)
+;;        avg))
+
+;; (->> (mutate base mutator)
+;;      (take 10))
+;; (generation base mutator score-fn 10)
+;; (nth (evolution base mutator score-fn 10) 20)
+;; (def t (nth (evolution base mutator score-fn 10) 25))
+;; t
+
+;; (let [f (nth (evolution base mutator score-fn 20) 25)]
+;;   [(score-fn f) f])
+;; (-> (insert-in 1 1 t)
+;;     eval)

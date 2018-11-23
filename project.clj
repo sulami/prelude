@@ -1,4 +1,4 @@
-(defproject schlachtschiff "0.0.1"
+(defproject sulami/prelude "0.0.1"
   :license {:name "MIT License"}
   :description "Personal Prelude."
   :dependencies [[org.clojure/clojure "1.9.0"]]
