@@ -37,6 +37,23 @@
         tail (-> idx inc (drop coll))]
     (concat head (list elm) tail)))
 
+;; Matrices
+
+(defn transpose
+  "Transpose a two-dimensional vector."
+  ([coll] (transpose [] coll))
+  ([acc coll]
+   (if (some empty? coll)
+     acc
+     (recur (conj acc (mapv first coll))
+            (map rest coll)))))
+
+(defn dot [x y]
+  "Dot product of two two-dimensional vector matrices."
+  (vec (for [a x]
+         (vec (for [b (transpose y)]
+                (reduce + (map * a b)))))))
+
 ;; Maths
 
 (defn sdiv [x y]
