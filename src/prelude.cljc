@@ -15,13 +15,6 @@
   (pprint x)
   x)
 
-;; Control Flow
-
-(defn update-when
-  "Update value with f if pred, otherwise return value."
-  [value pred f]
-  (if pred (f value) value))
-
 ;; Collections
 
 (defn in?
@@ -34,17 +27,24 @@
   "Inserts elm into coll at idx, overwriting whatever was there before."
   [elm idx coll]
   (let [head (vec (take idx coll))
-        tail (-> idx (+ 1) (drop coll) vec)]
+        tail (-> idx inc (drop coll) vec)]
     (reduce into [head [elm] tail])))
 
 (defn insert-in
   "Inserts elm into coll at idx, overwriting whatever was there before."
   [elm idx coll]
   (let [head (take idx coll)
-        tail (drop idx coll)]
+        tail (-> idx inc (drop coll))]
     (concat head (list elm) tail)))
 
 ;; Maths
+
+(defn sdiv [x y]
+  "Safe division. 1 if x == y, 0 if y == 0."
+  (cond
+    (= x y) 1
+    (zero? y) 0
+    :else (/ x y)))
 
 (defn distance
   "Distance between two numbers."
@@ -52,6 +52,7 @@
   (Math/abs (- x y)))
 
 (defn avg [coll]
+  "Average of a collection."
   (/ (apply + coll) (count coll)))
 
 (def fibonacci
@@ -126,7 +127,7 @@
   [base mutator score-fn gen-size]
   (->> (mutate base mutator)
        (take gen-size)
-       (map (partial attach-score score-fn))
+       (pmap (partial attach-score score-fn))
        (sort-by second)
        first
        first))
@@ -135,58 +136,3 @@
   "Generator for generations."
   [base mutator score-fn gen-size]
   (iterate #(generation % mutator score-fn gen-size) base))
-
-;; Example to approximate the square root of 2.
-;; (def base 0.0)
-;; (defn mutator [base]
-;;   (-> (rand)
-;;       (- 0.5)
-;;       (+ base)))
-;; (defn score-fn [x]
-;;   (-> x
-;;       (- (Math/sqrt 2))
-;;       Math/abs))
-;; (take 10 (evolution base mutator score-fn 10))
-
-;; Build a pipeline
-
-;; (def base '(->))
-;; (defn mutator [base]
-;;   (let [a (rand-nth [+ - * quot])
-;;         b (+ 1 (rand-int 10))]
-;;     (concat base (list (list a b)))))
-
-;; (defn proto [x]
-;;   (-> x (+ 5) (quot 2) (- 1) (* 3)))
-
-;; (def tests
-;;   [[-6 (proto -6)]
-;;    [-1 (proto -1)]
-;;    [0 (proto 0)]
-;;    [1 (proto 1)]
-;;    [2 (proto 2)]
-;;    [5 (proto 5)]
-;;    [7 (proto 7)]
-;;    [10 (proto 10)]
-;;    [100 (proto 100)]])
-
-;; (defn score-fn [x]
-;;   (->> (map
-;;         (fn [[i o]]
-;;           (-> (insert-in i 1 x)
-;;               eval
-;;               (distance o)))
-;;         tests)
-;;        avg))
-
-;; (->> (mutate base mutator)
-;;      (take 10))
-;; (generation base mutator score-fn 10)
-;; (nth (evolution base mutator score-fn 10) 20)
-;; (def t (nth (evolution base mutator score-fn 10) 25))
-;; t
-
-;; (let [f (nth (evolution base mutator score-fn 20) 25)]
-;;   [(score-fn f) f])
-;; (-> (insert-in 1 1 t)
-;;     eval)
