@@ -23,6 +23,16 @@
   [coll element]
   (some #(= element %) coll))
 
+((defn find-index
+   "Find the index of the first occurence of elm in coll."
+   ([elm coll]
+    (find-index 0 elm coll))
+   ([i elm coll]
+    (cond
+      (empty? coll) nil
+      (= elm (first coll)) i
+      :else (recur (inc i) elm (rest coll))))))
+
 (defn insert-at
   "Inserts elm into coll at idx, overwriting whatever was there before."
   [elm idx coll]
