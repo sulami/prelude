@@ -1,4 +1,4 @@
-(ns sulami.prelude
+(ns prelude.core
   (:require [clojure.pprint :refer [pprint]]))
 
 ;; Development

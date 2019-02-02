@@ -1,6 +1,6 @@
-(defproject sulami/prelude "0.0.1"
+(defproject org.clojars.sulami/prelude "0.0.1"
   :license {:name "MIT License"}
-  :description "Personal Prelude."
+  :description "Personal play- and dumping ground."
   :dependencies [[org.clojure/clojure "1.9.0"]]
   :java-source-paths ["src"]
   :jvm-opts ^:replace ["-server" "-Xmx4g"]
