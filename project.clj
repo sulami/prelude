@@ -1,4 +1,4 @@
-(defproject org.clojars.sulami/prelude "0.1.0-SNAPSHOT"
+(defproject org.clojars.sulami/prelude "0.1.0"
   :license {:name "MIT License"}
   :description "Personal Toolbox"
   :url "https://github.com/sulami/prelude"
