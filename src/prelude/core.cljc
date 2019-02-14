@@ -1,5 +1,11 @@
 (ns prelude.core
-  (:require [clojure.pprint :refer [pprint]]))
+  (:require [potemkin]
+            [clojure.pprint :refer [pprint]]))
+
+; Stealing some of ZTellman's goodies
+(potemkin/import-vars [potemkin
+                       import-vars
+                       fast-memoize])
 
 ;; Development
 
