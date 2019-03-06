@@ -47,6 +47,14 @@
         tail (-> idx inc (drop coll))]
     (concat head (list elm) tail)))
 
+(defn random-distribution
+  "Returns an element from a list of tuples (item, relative probablity)"
+  [xs]
+  (-> (for [[item probability] xs]
+        (repeat probability item))
+      flatten
+      rand-nth))
+
 ;; Matrices
 
 (defn transpose
