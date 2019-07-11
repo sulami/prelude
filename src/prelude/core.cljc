@@ -21,6 +21,14 @@
   (pprint x)
   x)
 
+;; Abstract
+
+(defn laitrap
+  "Like reverse `partial`, inserts the arguments in the beginning."
+  [f & args]
+  (fn inner [& inner-args]
+    (apply f (concat inner-args args))))
+
 ;; Collections
 
 (defn in?
