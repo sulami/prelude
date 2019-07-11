@@ -2,7 +2,7 @@
   :license {:name "MIT License"}
   :description "Personal Toolbox"
   :url "https://github.com/sulami/prelude"
-  :dependencies [[org.clojure/clojure "1.9.0"]
+  :dependencies [[org.clojure/clojure "1.10.1"]
                  [potemkin "0.4.5"]]
   :java-source-paths ["src"]
   :jvm-opts ^:replace ["-server" "-Xmx4g"]
